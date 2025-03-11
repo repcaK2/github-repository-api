@@ -23,8 +23,6 @@ public class GitHubController {
 
 	@GetMapping("/{username}/repositories")
 	public Uni<List<RepositoryResponse>> getRepositories(@PathVariable String username) {
-		// For testing, we override the provided username with a sample username.
-		String sampleUsername = "octocat";
-		return gitHubService.getUserRepositories(sampleUsername);
+		return gitHubService.getUserRepositories(username);
 	}
 }
