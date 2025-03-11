@@ -1,0 +1,176 @@
+# GitHub Repository API
+
+## Overview
+The GitHub Repository API is a reactive Spring Boot application built with Spring WebFlux and Mutiny. It retrieves public repositories for a specified GitHub user (excluding forks) and, for each repository, fetches the list of branches along with the SHA of the last commit on each branch. Designed to be lightweight, scalable, and easily extendable, the API leverages reactive programming paradigms to handle asynchronous calls to the GitHub REST API efficiently.
+
+## Features
+- **Reactive Programming:** Uses Spring WebFlux and Mutiny for non-blocking, asynchronous processing.
+- **GitHub Integration:** Retrieves repository and branch details for a given GitHub user via the GitHub REST API.
+- **Robust Error Handling:** Implements global exception handling to provide clear and consistent error responses.
+- **Integration Testing:** Includes integration tests to validate the "happy path" scenario with minimal mocking.
+
+## Technologies Used
+- **Java 21**
+- **Spring Boot 3.x**
+- **Spring WebFlux**
+- **Mutiny (SmallRye Reactive)**
+- **Maven**
+- **Project Reactor**
+
+## Prerequisites
+- JDK 21 or later
+- Maven 3.x
+- An active internet connection (required to access the GitHub API)
+
+## Installation
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/yourusername/github-repository-api.git
+   cd github-repository-api
+
+
+2. Build the Project:
+mvn clean install
+
+3. Configuration
+github:
+  api:
+    base-url: https://api.github.com
+
+4. Running the Application
+mvn spring-boot:run
+
+5. API Endpoints
+Get User Repositories
+Endpoint: GET /github/{username}/repositories
+
+This endpoint retrieves a list of repositories for the specified GitHub user, excluding forked repositories. For each repository, the response includes:
+
+repositoryName: The name of the repository.
+ownerLogin: The GitHub username of the repository owner.
+branches: A list of branches, where each branch provides:
+branchName: The name of the branch.
+lastCommitSha: The SHA of the last commit on that branch.
+Example Request:
+curl http://localhost:8080/github/anyValue/repositories
+Example Response:
+[
+  {
+    "repositoryName": "git-consortium",
+    "ownerLogin": "octocat",
+    "branches": [
+      {
+        "branchName": "master",
+        "lastCommitSha": "b33a9c7c02ad93f621fa38f0e9fc9e867e12fa0e"
+      }
+    ]
+  },
+  {
+    "repositoryName": "hello-worId",
+    "ownerLogin": "octocat",
+    "branches": [
+      {
+        "branchName": "master",
+        "lastCommitSha": "7e068727fdb347b685b658d2981f8c85f7bf0585"
+      }
+    ]
+  },
+  {
+    "repositoryName": "octocat.github.io",
+    "ownerLogin": "octocat",
+    "branches": [
+      {
+        "branchName": "gh-pages",
+        "lastCommitSha": "c0e4a095428f36b81f0bd4239d353f71918cbef3"
+      },
+      {
+        "branchName": "master",
+        "lastCommitSha": "3a9796cf19902af0f7e677391b340f1ae4128433"
+      }
+    ]
+  },
+  {
+    "repositoryName": "Spoon-Knife",
+    "ownerLogin": "octocat",
+    "branches": [
+      {
+        "branchName": "change-the-title",
+        "lastCommitSha": "f439fc5710cd87a4025247e8f75901cdadf5333d"
+      },
+      {
+        "branchName": "main",
+        "lastCommitSha": "d0dd1f61b33d64e29d8bc1372a94ef6a2fee76a9"
+      },
+      {
+        "branchName": "test-branch",
+        "lastCommitSha": "58060701b538587e8b4ab127253e6ed6fbdc53d1"
+      }
+    ]
+  },
+  {
+    "repositoryName": "test-repo1",
+    "ownerLogin": "octocat",
+    "branches": [
+      {
+        "branchName": "gh-pages",
+        "lastCommitSha": "57523742631876181d95bc268e09fb3fd1a4d85e"
+      }
+    ]
+  },
+  {
+    "repositoryName": "Hello-World",
+    "ownerLogin": "octocat",
+    "branches": [
+      {
+        "branchName": "master",
+        "lastCommitSha": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d"
+      },
+      {
+        "branchName": "octocat-patch-1",
+        "lastCommitSha": "b1b3f9723831141a31a1a7252a213e216ea76e56"
+      },
+      {
+        "branchName": "test",
+        "lastCommitSha": "b3cbd5bbd7e81436d2eee04537ea2b4c0cad4cdf"
+      }
+    ]
+  }
+]
+
+6. Testing
+mvn test
+
+7. Project Structure
+github-repository-api
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── org
+    │   │       └── example
+    │   │           └── githubrepositoryapi
+    │   │               ├── Application.java                (Main Spring Boot application)
+    │   │               ├── controller
+    │   │               │   └── GitHubController.java         (REST API endpoints)
+    │   │               ├── dto
+    │   │               │   ├── BranchResponse.java           (DTO for branch details)
+    │   │               │   └── RepositoryResponse.java       (DTO for repository details)
+    │   │               ├── exception
+    │   │               │   ├── GlobalExceptionHandler.java     (Global exception handler)
+    │   │               │   └── GitHubUserNotFoundException.java  (Custom exception for user not found)
+    │   │               └── github
+    │   │                   ├── GitHubService.java              (Service for GitHub API calls)
+    │   │                   ├── GitHubRepo.java                 (Model for GitHub repository)
+    │   │                   ├── GitHubBranch.java               (Model for GitHub branch)
+    │   │                   └── GitHubCommit.java               (Model for GitHub commit - SHA)
+    │   └── resources
+    │       └── application.yml                              (Application configuration file)
+    └── test
+        └── java
+            └── org
+                └── example
+                    └── githubrepositoryapi
+                        └── GitHubControllerIntegrationTest.java (Integration tests)
+
+
+
